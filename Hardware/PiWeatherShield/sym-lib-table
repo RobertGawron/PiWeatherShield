@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "PiWeatherShieldSymbolLibrary")(type "KiCad")(uri "${KIPRJMOD}/PiWeatherShieldSymbolLibrary.kicad_sym")(options "")(descr ""))
+)
