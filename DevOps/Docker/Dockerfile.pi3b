@@ -1,0 +1,11 @@
+# Use an ARM-compatible image
+FROM arm32v7/python:3.9-slim  
+
+WORKDIR /app
+
+COPY Software/requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+COPY Software .
+
+CMD ["python", "measurement_collector.py"]

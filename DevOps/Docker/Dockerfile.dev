@@ -1,0 +1,22 @@
+# Use Docker-in-Docker image as the base for Docker support
+FROM docker:dind
+
+# Install QEMU for ARM cross-platform builds and other necessary packages
+RUN apk add --no-cache \
+    qemu qemu-system-x86_64 qemu-system-arm \
+    bash curl git python3 py3-pip
+
+# Set the working directory inside the container
+WORKDIR /workspace
+
+# Copy the script into the container
+COPY DevOps/Docker/SetupBuildx.sh /usr/local/bin/SetupBuildx.sh
+
+# Make the script executable
+RUN chmod +x /usr/local/bin/SetupBuildx.sh
+
+# When you have multiple CMD lines, only the final one is used
+#RUN "/usr/local/bin/SetupBuildx.sh"
+
+CMD ["/bin/bash"]
+
