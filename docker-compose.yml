@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  dev:
+    image: pi-dev
+    build:
+      context: .
+      dockerfile: DevOps/Docker/Dockerfile.dev
+    privileged: true
+    stdin_open: true  # Keep stdin open for interaction
+    tty: true         # Allocate a TTY for interactive Bash
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./Software:/workspace/Software
+      - ./DevOps/Docker/Dockerfile.pi3b:/workspace/Dockerfile.pi3b
+    working_dir: /workspace
+    # Do not override the CMD from Dockerfile
