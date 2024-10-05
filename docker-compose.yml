@@ -12,5 +12,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./Software:/workspace/Software
       - ./DevOps/Docker/Dockerfile.pi3b:/workspace/Dockerfile.pi3b
+      - ./DevOps/Ansible:/workspace/Ansible
+      - ./DevOps/BuildArtifacts:/workspace/BuildArtifacts
+      - ssh-keys:/root/.ssh
     working_dir: /workspace
-    # Do not override the CMD from Dockerfile
+    entrypoint: >
+      /bin/sh -c "
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes &&
+      docker buildx create --use &&
+      docker buildx inspect --bootstrap &&
+      /bin/bash"
+volumes:
+  ssh-keys:
