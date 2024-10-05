@@ -1,4 +1,4 @@
-# PiWeatherShield
+# Pi Weather Shield
 
 ## Purpose
 
@@ -18,51 +18,16 @@ This project is straightforward and includes the following I2C components:
 
 ![Circuit of the device](./Documentation/Circuit/07_09_2024.png)
 
-
 Tools: KiCad.
 
 [More info.](./Hardware/README.md)
 
 ## Installation
 
-To simplify the setup, the project heavily relies on Docker, making deployment and management easier. This either simplifies or complicates things, as it's a relatively small project, but it's a great way to learn containerization.
+The application is quite simple (just a couple of Python scripts) and could easily be developed directly on the Raspberry Pi, which is probably what most people would do for a small project like this. However, I’ve chosen a different approach -one that might seem like overkill- but it allows me to learn and apply DevOps.
 
-### Initial Setup
-* Install Raspberry Pi OS on an SD card using the [official Raspberry Pi Imager](https://www.raspberrypi.com/software/). Note: you don't need an image with desktop support.
-* Configure Wi-Fi on your Raspberry Pi in order to be able to connect to it via ssh.
-* Enable I2C on the Raspberry Pi to allow communication with I2C devices (TODO: clarification of the steps).
-* [Install Docker on your PC](https://docs.docker.com/engine/install/).
+We'll set up a local Docker environment capable of cross-compiling Docker images that contain our application, which will then be deployed to the Raspberry Pi.
 
-Now we are ready to create a container where we will build containers with our app that we will deploy on Raspberry Pi, and our Raspberry Pi is ready for it.
+Using Ansible, we will preconfigure the Raspberry Pi (install Docker, enable I2C, etc.) and deploy the Docker images to the Pi automatically.
 
-### Setup Docker container to cross-build result Docker Raspberry Pi images
-
-Most PCs run on x86 architecture, but Raspberry Pi uses ARM, which is why cross-compilation is needed. We will do it inside a Docker container.
-
-In the root directory (where this README.md is located) run:
-* Pull Docker-in-Docker Image
-  
-  ```docker pull docker:dind```
-  
-* Build the Docker Image for Development
-  
-  ```docker-compose build```
-
-* Start the docker container
-  
-  ```docker-compose run --service-ports dev /bin/bash```
-  
-  Note: you will be logged into the container.
-
-* Set Up Docker Buildx
-
-  ```/usr/local/bin/SetupBuildx.sh```
-
-Now we are ready to build the images that we will send to the Raspberry Pi. The configuration is done inside the container, meaning that we don't pollute our machine with extra installations. It is replicable (the steps can be reused by someone) and automated.
-
-### Build the image that will be sent to Raspberry Pi
-
-```buildx build --platform linux/arm/v7 -f Dockerfile.pi3b -t pi-weather .```
-
-That's it for now!
-
+[More info.](./DevOps/README.md)
