@@ -1,0 +1,8 @@
+[package]
+name    = "application"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+heapless = "0.8"          # for the fixed-size String used in Sampler::run
+arrayvec = { version = "0.7", default-features = false }

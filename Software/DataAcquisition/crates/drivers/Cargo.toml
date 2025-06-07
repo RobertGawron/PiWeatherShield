@@ -1,0 +1,34 @@
+[package]
+name    = "drivers"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Local crates
+domain      = { path = "../domain" }
+application = { path = "../application" }
+
+# Hardware abstraction
+embedded-hal        = "1.0"
+linux-embedded-hal  = "0.4"
+
+# Sensor drivers
+bme280-rs   = { version = "0.3", default-features = false, features = ["blocking"] }
+si7021-t-rh = "0.1"
+
+ssd1306 = { version = "0.10.0", features = ["graphics"] }
+embedded-graphics = "0.8"    # Update to 0.8 for compatibility with ssd1306 0.10
+heapless = "0.8"
+display-interface = "0.5"  # Add this line
+
+# Optional std-only dependencies
+csv   = { version = "1.3", optional = true }
+serde = { version = "1.0", default-features = false, features = ["derive"], optional = true }
+
+[features]
+default = ["std"]
+std     = ["dep:csv", "dep:serde"]
+
+
+[dev-dependencies]
+embedded-graphics-simulator = "0.7"

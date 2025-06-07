@@ -1,26 +1,20 @@
-version: '3.8'
 services:
-  dev:
-    image: pi-dev
+  atmosphere-pi:
+    image: atmosphere-pi-imgage
     build:
       context: .
-      dockerfile: DevOps/Docker/Dockerfile.dev
+      dockerfile: DevOps/Docker/Dockerfile
+      args:                       # passed to the Dockerfile
+        UID: "${LOCAL_UID:-1000}"  # Changed from 1001 to 1000
+        GID: "${LOCAL_GID:-1000}"  # Changed from 118 to 1000
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"  # Updated to match
     privileged: true
     stdin_open: true  # Keep stdin open for interaction
     tty: true         # Allocate a TTY for interactive Bash
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - ./Software:/workspace/Software
-      - ./DevOps/Docker/Dockerfile.pi3b:/workspace/Dockerfile.pi3b
-      - ./DevOps/Ansible:/workspace/Ansible
       - ./DevOps/BuildArtifacts:/workspace/BuildArtifacts
-      - ssh-keys:/root/.ssh
     working_dir: /workspace
-    entrypoint: >
-      /bin/sh -c "
-      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes &&
-      docker buildx create --use &&
-      docker buildx inspect --bootstrap &&
-      /bin/bash"
-volumes:
-  ssh-keys:
+    environment:
+      - CARGO_HOME=/home/appuser/.cargo
+      - PATH=/home/appuser/.cargo/bin:$PATH

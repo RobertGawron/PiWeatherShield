@@ -1,1 +1,0 @@
-print ('HELLLO FROM MY APP')
