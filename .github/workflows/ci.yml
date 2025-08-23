@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_PROFILES: dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Export runner UID/GID so build args pick them up
+      - name: Export runner UID/GID
+        shell: bash
+        run: |
+          echo "LOCAL_UID=$(id -u)"   >> "$GITHUB_ENV"
+          echo "LOCAL_GID=$(id -g)"   >> "$GITHUB_ENV"
+
+      - name: Build dev container
+        run: docker compose build atmosphere-pi
+
+      - name: Run unit tests & coverage
+        run: |
+          docker compose run --rm atmosphere-pi \
+            bash -euo pipefail -c '
+              cd /workspace/Software/DataAcquisition
+              export PATH="$HOME/.cargo/bin:$PATH"
+              cargo tarpaulin --workspace \
+                              --timeout 60 \
+                              --out html \
+                              --output-dir coverage-html
+            '
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: Software/DataAcquisition/coverage-html

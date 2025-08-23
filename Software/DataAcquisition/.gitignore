@@ -1,0 +1,15 @@
+# Generated build artifacts
+/target/
+
+# For library projects, optionally ignore Cargo.lock
+# For executable apps, keep Cargo.lock for reproducible builds:
+# https://stackoverflow.com/a/43667176
+# Cargo.lock
+
+# Backup files from rustfmt
+**/*.rs.bk
+
+*.png
+*.svg
+*.log
+*.csv
