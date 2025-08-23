@@ -1,0 +1,25 @@
+[package]
+name    = "weather_station"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+heapless            = "0.8"
+drivers = { path = "../../crates/drivers" }
+application = { path = "../../crates/application" }
+domain       = { path = "../../crates/domain" }
+embedded-hal = "1.0.0"       # Use embedded-hal v1.0 (traits 1.0)
+linux-embedded-hal = "0.4"   # Updated to use embedded-hal v1.0 traits:contentReference[oaicite:4]{index=4}
+display-interface = "0.5"  # Add this line
+
+embedded-graphics = "0.8"    # Update to 0.8 for compatibility with ssd1306 0.10
+ssd1306 = "0.10"             # SSD1306 display driver supporting embedded-hal 1.0
+bme280-rs = { version = "0.3", default-features = false, features = ["blocking"] }
+#sgp30 = "1.0"                # SGP30 v1.0 uses embedded-hal 1.0 
+#si7021 = "0.2"               # Latest Si7021 driver (uses i2cdev directly; not hal-based)
+si7021-t-rh = "0.1"  # or latest published version
+
+embedded-graphics-unicodefonts = "0.1"
+csv = "1.1"
+serde = { version = "1.0", features = ["derive"] }
+

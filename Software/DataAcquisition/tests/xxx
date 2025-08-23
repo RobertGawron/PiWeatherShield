@@ -1,0 +1,27 @@
+use embedded_graphics::{
+    mono_font::{FONT_10X20, MonoTextStyleBuilder},
+    pixelcolor::BinaryColor,
+    prelude::*,
+    text::Text,
+};
+use embedded_graphics_simulator::{SimulatorDisplay, WindowBuilder};
+
+#[test]
+fn preview_font_10x20() {
+    let mut sim_display: SimulatorDisplay<BinaryColor> = SimulatorDisplay::new(Size::new(128, 32));
+
+    let style = MonoTextStyleBuilder::new()
+        .font(&FONT_10X20)
+        .text_color(BinaryColor::On)
+        .build();
+
+    Text::new("34.4C 31.6% 1001hPa", Point::new(0, 0), style)
+        .draw(&mut sim_display)
+        .unwrap();
+
+    let mut window = WindowBuilder::new(&sim_display)
+        .title("Font 10x20 Preview")
+        .scale(4)
+        .build();
+    window.show_static(&sim_display);
+}

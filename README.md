@@ -1,22 +1,34 @@
 # Pi Weather Shield
 
+[![CI](https://github.com/RobertGawron/PiWeatherShield/actions/workflows/ci.yml/badge.svg)](https://github.com/RobertGawron/PiWeatherShield/actions/workflows/ci.yml)
+
 ## Purpose
 
-The PiWeatherShield is designed to create a simple home weather station using a breadboard and low-cost sensors connected to a Raspberry Pi. This weather station measures the temperature, humidity, and air pressure in the room where the Raspberry Pi is located, making it perfect for indoor monitoring, which is sufficient in many use cases.
+Low-cost, easy-to-build hat Raspberry Pi that turns it into an indoor weather station. On the hardware side, it's a simple PCB with sensors I2C parts (BME280 and Si7021) and a small OLED screen to show the meassurements: temperature, humidity, and air pressure. On the software side there is a Rust app that handles the data and can send them via MQTT for furthr processing (using tools like Graphana and Home asistant).
 
-The shield is easy to solder an can be integrated with the [Home Environment Monitor](https://github.com/RobertGawron/HomeEnvironmentMonitor), adding real-time environmental data to the broader monitoring system.
+The project can be integrated with the [Home Environment Monitor](https://github.com/RobertGawron/HomeEnvironmentMonitor), adding real-time graphs of the meassurements accessible from phone or PC.
 
-![Picture of the device](./Documentation/Pictures/device_21_09_2024.jpg)
+![Picture of the device](./Documentation/Pictures/device_23_08_2025.jpg)
 
 ## Hardware
 
 This project is straightforward and includes the following I2C components:
 
-* **BME280:** Temperature, Humidity, and Pressure sensor.
-* **Si7021:** Temperature and Humidity sensor.
+* **Si7021:**
+    * Temperature
+    * Relative humidity
+* **SGP30:**
+    * TVOC (Total Volatile Organic Compounds)
+    * eCO2 (equivalent CO2)
+    * Raw hydrogen (H2) signal
+    * Raw ethanol signal
+* **BME280:**
+    * Temperature
+    * Relative humidity
+    * Atmospheric pressure
 * **SSD1306:** 0.91-inch 128x32 OLED display.
 
-![Circuit of the device](./Documentation/Circuit/07_09_2024.png)
+![Circuit of the device](./Hardware/PiWeatherShield/PiWeatherShield.svg)
 
 Tools: KiCad.
 
