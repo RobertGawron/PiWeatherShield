@@ -122,7 +122,7 @@ impl Sink for MqttSink {
             };
 
             let topic = format!(
-                "{}/{:?}/{}",
+                "{}/{}/{}",
                 self.base_topic, sensor.sensor_id, sensor_type_str
             );
 

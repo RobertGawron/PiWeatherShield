@@ -1,4 +1,5 @@
 use heapless::Vec;
+use std::fmt;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum SensorType {
@@ -21,6 +22,13 @@ pub enum SensorId {
     Si7021
 }
 
+impl fmt::Display for SensorId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Use `Debug` format internally to easily convert enum variant to string
+        // This is a common and convenient pattern.
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Measurement {
