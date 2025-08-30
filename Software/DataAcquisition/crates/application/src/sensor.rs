@@ -1,4 +1,4 @@
-use crate::sensor_data::Reading;
+use crate::sensor_data::SensorSample;
 
 /// Represents a sensor connected to the PCB that provides environmental data.
 ///
@@ -10,5 +10,5 @@ pub trait Sensor {
     type Error;
 
     /// Reads a value from the sensor.
-    fn read(&mut self) -> Result<Reading, Self::Error>;
+    fn read(&mut self) -> Result<SensorSample, Self::Error>;
 }

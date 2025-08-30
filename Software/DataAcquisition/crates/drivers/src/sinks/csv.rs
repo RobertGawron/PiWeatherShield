@@ -1,6 +1,6 @@
 #![cfg(feature = "std")]
 
-use super::{Reading, Sink};
+use super::{SensorSample, Sink};
 use csv::Writer;
 use std::fmt;
 use std::io::{BufWriter, Write};
@@ -80,7 +80,7 @@ impl<W: Write> CsvSink<W> {
 impl<W: Write + std::marker::Send> Sink for CsvSink<W> {
     type Error = CsvSinkError;
 
-    fn store(&mut self, r: &Reading) -> Result<(), Self::Error> {
+    fn store(&mut self, r: &SensorSample) -> Result<(), Self::Error> {
         let timestamp = r.timestamp_ms.to_string();
 
         // Build sensor data string

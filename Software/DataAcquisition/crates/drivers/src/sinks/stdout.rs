@@ -1,4 +1,4 @@
-use super::{Reading, Sink};
+use super::{SensorSample, Sink};
 use application::SensorType;
 
 pub struct StdOutSink;
@@ -6,7 +6,7 @@ pub struct StdOutSink;
 impl Sink for StdOutSink {
     type Error = core::convert::Infallible;
 
-    fn store(&mut self, r: &Reading) -> Result<(), Self::Error> {
+    fn store(&mut self, r: &SensorSample) -> Result<(), Self::Error> {
         #[cfg(feature = "std")]
         {
             // Print timestamp first
@@ -30,16 +30,16 @@ impl Sink for StdOutSink {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use application::{SensorReading, SensorType, Unit, SensorId};
+    use application::{Measurement, SensorType, Unit, SensorId};
 
     #[test]
     fn prints_without_error() {
         let mut sink = StdOutSink;
-        let mut reading = Reading::new(1234567890);
+        let mut reading = SensorSample::new(1234567890);
 
         // Add some test sensor readings
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Temperature,
                 value: 23.5,
                 unit: Unit::Celsius,
@@ -48,7 +48,7 @@ mod tests {
             .unwrap();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Humidity,
                 value: 65.2,
                 unit: Unit::Percent,
@@ -57,7 +57,7 @@ mod tests {
             .unwrap();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Pressure,
                 value: 1013.25,
                 unit: Unit::HectoPascal,
@@ -72,11 +72,11 @@ mod tests {
     #[test]
     fn handles_partial_sensor_data() {
         let mut sink = StdOutSink;
-        let mut reading = Reading::new(1234567890);
+        let mut reading = SensorSample::new(1234567890);
 
         // Only temperature and humidity (no pressure)
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Temperature,
                 value: 20.0,
                 unit: Unit::Celsius,
@@ -85,7 +85,7 @@ mod tests {
             .unwrap();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Humidity,
                 value: 45.0,
                 unit: Unit::Percent,

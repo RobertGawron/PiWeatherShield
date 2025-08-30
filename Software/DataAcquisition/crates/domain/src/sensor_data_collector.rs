@@ -4,7 +4,7 @@
 //! them to multiple output sinks (CSV files, stdout, OLED displays, etc.) without using
 //! dynamic allocation.
 
-use application::{Reading, Sink};
+use application::{SensorSample, Sink};
 use arrayvec::ArrayVec;
 
 /// A collector that distributes sensor readings to multiple sinks.
@@ -73,7 +73,7 @@ impl<T: Sink, const N: usize> SensorDataCollector<T, N> {
     ///     }
     /// }
     /// ```
-    pub fn distribute(&mut self, reading: &Reading) -> Result<(), Vec<(usize, T::Error)>> {
+    pub fn distribute(&mut self, reading: &SensorSample) -> Result<(), Vec<(usize, T::Error)>> {
         let errors: Vec<_> = self
             .sinks
             .iter_mut()

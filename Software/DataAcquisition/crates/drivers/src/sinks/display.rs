@@ -1,8 +1,8 @@
-//! OLED display sink - renders the latest `Reading` on a 12832 SSD1306
+//! OLED display sink - renders the latest `SensorSample` on a 12832 SSD1306
 use core::fmt::{self, Write as _};
 
 use application::Sink;
-use application::{Reading, SensorReading, SensorType};
+use application::{SensorSample, Measurement, SensorType};
 use display_interface::{DisplayError, WriteOnlyDataCommand};
 use embedded_graphics::{
     mono_font::{ascii::FONT_9X15, MonoTextStyleBuilder},
@@ -90,8 +90,8 @@ where
 {
     type Error = OledDisplayError;
 
-    fn store(&mut self, reading: &Reading) -> Result<(), Self::Error> {
-        // Use the proper helper methods from Reading struct
+    fn store(&mut self, reading: &SensorSample) -> Result<(), Self::Error> {
+        // Use the proper helper methods from SensorSample struct
         let bme_temp = reading.get_temperature(Some(application::SensorId::Bme280)).unwrap_or(0.0);
         let bme_humidity = reading.get_humidity(Some(application::SensorId::Bme280)).unwrap_or(0.0);
         let si_temp = reading.get_temperature(Some(application::SensorId::Si7021)).unwrap_or(0.0);
@@ -227,12 +227,12 @@ mod visual_tests {
         si_temp: f32,
         si_humidity: f32,
         timestamp_ms: u64,
-    ) -> Reading {
-        let mut reading = Reading::new(timestamp_ms);
+    ) -> SensorSample {
+        let mut reading = SensorSample::new(timestamp_ms);
 
         // Add BME280 readings
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Temperature,
                 value: bme_temp,
                 unit: application::Unit::Celsius,
@@ -241,7 +241,7 @@ mod visual_tests {
             .ok();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Humidity,
                 value: bme_humidity,
                 unit: application::Unit::Percent,
@@ -250,7 +250,7 @@ mod visual_tests {
             .ok();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Pressure,
                 value: bme_pressure,
                 unit: application::Unit::HectoPascal,
@@ -260,7 +260,7 @@ mod visual_tests {
 
         // Add SI7021 readings
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Temperature,
                 value: si_temp,
                 unit: application::Unit::Celsius,
@@ -269,7 +269,7 @@ mod visual_tests {
             .ok();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Humidity,
                 value: si_humidity,
                 unit: application::Unit::Percent,

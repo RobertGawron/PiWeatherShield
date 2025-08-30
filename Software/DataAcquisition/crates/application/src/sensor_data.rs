@@ -23,7 +23,7 @@ pub enum SensorId {
 
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct SensorReading {
+pub struct Measurement {
     pub sensor_type: SensorType,
     pub value: f32,
     pub unit: Unit,
@@ -31,12 +31,12 @@ pub struct SensorReading {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct Reading {
+pub struct SensorSample {
     pub timestamp_ms: u64,
-    pub sensors: Vec<SensorReading, 16>, // Max 16 sensor readings
+    pub sensors: Vec<Measurement, 16>, // Max 16 sensor readings
 }
 
-impl Reading {
+impl SensorSample {
     pub fn new(timestamp_ms: u64) -> Self {
         Self {
             timestamp_ms,
@@ -44,7 +44,7 @@ impl Reading {
         }
     }
 
-    pub fn add_sensor(&mut self, reading: SensorReading) -> Result<(), ()> {
+    pub fn add_sensor(&mut self, reading: Measurement) -> Result<(), ()> {
         self.sensors.push(reading).map_err(|_| ())
     }
 
@@ -76,13 +76,13 @@ impl Reading {
             .map(|s| s.value)
     }
 
-    pub fn get_all_temperatures(&self) -> impl Iterator<Item = &SensorReading> {
+    pub fn get_all_temperatures(&self) -> impl Iterator<Item = &Measurement> {
         self.sensors
             .iter()
             .filter(|s| s.sensor_type == SensorType::Temperature)
     }
 
-    pub fn get_all_humidities(&self) -> impl Iterator<Item = &SensorReading> {
+    pub fn get_all_humidities(&self) -> impl Iterator<Item = &Measurement> {
         self.sensors
             .iter()
             .filter(|s| s.sensor_type == SensorType::Humidity)

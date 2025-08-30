@@ -3,7 +3,7 @@ use embedded_hal::i2c::I2c;
 use linux_embedded_hal::Delay;
 
 use application::Sensor;
-use application::{Reading, SensorReading, SensorType, Unit, SensorId};
+use application::{SensorSample, Measurement, SensorType, Unit, SensorId};
 
 /* --------------------------------------------------------------------- */
 pub struct Bme280Sensor<I2C> {
@@ -38,16 +38,16 @@ where
 {
     type Error = E;
 
-    fn read(&mut self) -> Result<Reading, Self::Error> {
+    fn read(&mut self) -> Result<SensorSample, Self::Error> {
         // Every call returns Result<Option<f32>, E>
         let t = self.inner.read_temperature()?.unwrap_or_default();
         let h = self.inner.read_humidity()?.unwrap_or_default();
         let p = self.inner.read_pressure()?.unwrap_or_default() / 100.0;
 
-        let mut reading = Reading::new(0); // Timestamp should be set by application layer
+        let mut reading = SensorSample::new(0); // Timestamp should be set by application layer
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Temperature,
                 value: t,
                 unit: Unit::Celsius,
@@ -56,7 +56,7 @@ where
             .ok();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Humidity,
                 value: h,
                 unit: Unit::Percent,
@@ -65,7 +65,7 @@ where
             .ok();
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Pressure,
                 value: p,
                 unit: Unit::HectoPascal,

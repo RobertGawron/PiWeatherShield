@@ -2,7 +2,7 @@ use linux_embedded_hal::Delay;
 use si7021_t_rh as si7021;
 
 use application::Sensor;
-use application::{Reading, SensorReading, SensorType, Unit, SensorId};
+use application::{SensorSample, Measurement, SensorType, Unit, SensorId};
 use core::fmt; // Import fmt for manual Display/Debug implementations
 
 // Define a new error type that wraps the si7021_t_rh error
@@ -65,17 +65,17 @@ where
     E: core::fmt::Debug + core::fmt::Display + 'static, // Ensure E implements Debug and Display
 {
     type Error = Si7021Error<E>; // Use the new error type
-    fn read(&mut self) -> Result<Reading, Self::Error> {
+    fn read(&mut self) -> Result<SensorSample, Self::Error> {
         let t = self.inner.read_temperature().map_err(Si7021Error::Driver)?;
         let h = self
             .inner
             .read_relative_humidity()
             .map_err(Si7021Error::Driver)?;
 
-        let mut reading = Reading::new(0);
+        let mut reading = SensorSample::new(0);
 
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Temperature,
                 value: t,
                 unit: Unit::Celsius,
@@ -83,7 +83,7 @@ where
             })
             .ok();
         reading
-            .add_sensor(SensorReading {
+            .add_sensor(Measurement {
                 sensor_type: SensorType::Humidity,
                 value: h,
                 unit: Unit::HectoPascal,
